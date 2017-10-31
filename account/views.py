@@ -41,6 +41,7 @@ def log_in(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        # 校验用户是否匹配
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
