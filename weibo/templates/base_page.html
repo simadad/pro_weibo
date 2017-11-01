@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block base_header %}
+<p class='pull-right'>
+	<span><a href='{% url "index" %}'>首页</a></span>
+	<span>|</span>
+	<span><a href='{% url "account:logout" %}'>退出登录</a></span>
+</p>
+	{% block header %}{% endblock %}
+{% endblock %}
+
+{% block base_header_to_content %}<hr />{% endblock %}
+
+{% block base_content %}
+<div class='col-md-2'>
+{% block left %}
+	<input class='form-control'>
+{% endblock %}
+</div>
+<div class='col-md-10'>
+{% block right %}
+	<input class='form-control'>
+{% endblock %}
+</div>
+{% endblock %}
+
+{% block base_content_to_footer %}<hr />{% endblock %}

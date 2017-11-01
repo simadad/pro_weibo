@@ -122,3 +122,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+# DEBUG 模式下注释
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# DEBUG 模式下设置
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    '/static/',
+)
