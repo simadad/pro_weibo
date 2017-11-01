@@ -6,4 +6,5 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def homepage(request):
-    return HttpResponse('登录成功！')
+    user = request.user
+    return HttpResponse(str(user))

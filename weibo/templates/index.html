@@ -9,6 +9,14 @@
 	<h1>微博</h1>
 </header>
 <hr />
+{% if user.is_authenticated %}
+<content>
+	<h1>
+		<span><a href='{% url "wb:homepage" %}'>我的主页</a></span>
+		<span><a href='{% url "account:logout" %}'>退出登录</a></span>
+	</h1>
+</content>
+{% else %}
 <content>
 	<h3>注册</h3>
 	<form method='POST' action='{% url "account:register" %}'>
@@ -46,6 +54,7 @@
 		<input type='submit' value='提交'>
 	</form>
 </content>
+{% endif %}
 <hr />
 <footer>
 	<p>欢迎访问</p>
