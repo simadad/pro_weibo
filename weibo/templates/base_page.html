@@ -13,7 +13,12 @@
 {% block base_content %}
 <div class='col-md-2'>
 {% block left %}
-	<input class='form-control'>
+	<div class="list-group">
+		<a href="{% url 'index' %}" class="list-group-item text-center">首页</a>
+		<a href="{% url 'wb:homepage' %}" class="list-group-item text-center">个人中心</a>
+		<a href="{% url 'wb:upage' %}?uid={{ user.id }}" class="list-group-item text-center">我的主页</a>
+		<a href="#" class="list-group-item text-center">好友关系</a>
+	</div>
 {% endblock %}
 </div>
 <div class='col-md-10'>
