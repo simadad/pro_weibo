@@ -2,7 +2,7 @@ from django.conf.urls import url
 from account.views import *
 
 urlpatterns = [
-    url(r'^register', register, name='register'),
-    url(r'^login', log_in, name='login'),
-    url(r'^logout', log_out, name='logout'),
+    url(r'^register', RegisterView.as_view(), name='register'),
+    url(r'^login', LogInView.as_view(), name='login'),
+    url(r'^logout', LogOutView.as_view(), name='logout'),
 ]

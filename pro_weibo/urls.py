@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from pro_weibo.views import index
+# from pro_weibo.views import index
+from pro_weibo.views import Index
 
 urlpatterns = [
     url(r'^weibo/', include('weibo.urls', namespace='wb')),
-    url(r'^account/', include('account.urls', namespace='account')),
+    url(r'^accounts/', include('account.urls', namespace='account')),
     url(r'^admin/', admin.site.urls),
-    url(r'^$', index, name='index')
+    # url(r'^$', index, name='index'),
+    url(r'^$', Index.as_view(), name='index'),
 ]
