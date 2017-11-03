@@ -61,22 +61,28 @@ class WBText(models.Model):
     """
     文字微博
     """
-    author = models.OneToOneField(WBUser, verbose_name='作者')
+    author = models.ForeignKey(WBUser, verbose_name='作者', related_name='ori_wbs')
     msg = models.TextField(verbose_name='微博', max_length=500)
+
+    def __str__(self):
+        return '{msg}...'.format(msg=self.msg[:20])
 
 
 class WeiBo(models.Model):
     """
     微博信息
     """
-    user = models.ForeignKey(WBUser, verbose_name='用户', related_name='weibos')
+    user = models.ForeignKey(WBUser, verbose_name='用户', related_name='wbs')
     time_create = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     is_del = models.BooleanField(verbose_name='是否删除', default=False)
-    text = models.ForeignKey(WBText, verbose_name='文本', related_name='weibos')
+    text = models.ForeignKey(WBText, verbose_name='文本', related_name='wbs')
 
     def del_this(self):
         self.is_del = True
         self.save()
+
+    def __str__(self):
+        return self.text
 
 
 class Comment(models.Model):

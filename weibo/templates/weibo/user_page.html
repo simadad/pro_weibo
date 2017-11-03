@@ -1,5 +1,21 @@
 {% extends 'base_page.html' %}
 {% block title %}{{ wb_user.name }}{% endblock %}
-{% block header %}
-<h2 class='text-center'><i>{{ wb_user }}</i> 的主页</h2>
+{% block right %}
+<div class="jumbotron">
+  <h1>{{ wb_user.name }} 的主页</h1>
+  <p>个性签名...</p>
+  <p><a class="btn btn-primary btn-lg" href="#" role="button">修改资料</a></p>
+</div>
+{% for wb in wbs %}
+<div class="panel panel-default container-fluid">
+	<div class="panel-heading row">
+		<span class='col-sm-5'>作者: {{ wb.text.author }}</span>
+		<span class='col-sm-5'>时间: {{ wb.time_create }}</span>
+		<span class='col-sm-2 text-right'>点赞: 0</span>
+	</div>
+	<div class="panel-body">
+		{{ wb.text.msg }}
+	</div>
+</div>
+{% endfor %}
 {% endblock %}
