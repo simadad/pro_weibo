@@ -1,21 +1,63 @@
 {% extends 'base_page.html' %}
 {% block title %}个人主页{% endblock %}
+{% block left_more %}
+<hr />
+<div class='list-group'>
+	<a href='#' class='list-group-item text-center list-group-item-info' data-toggle="modal" data-target="#wb_update_modal">发微博</a>
+	<a href='#' class='list-group-item text-center list-group-item-info'>发图片</a>
+</div>
+{% endblock %}
 {% block right %}
 <div class="jumbotron">
   <h1>欢迎回来 {{ wb_user.name }}</h1>
   <p>个性签名...</p>
   <p><a class="btn btn-primary btn-lg" href="#" role="button">修改资料</a></p>
 </div>
-{% for wb in wbs %}
-<div class="panel panel-default container-fluid">
-	<div class="panel-heading row">
-		<span class='col-sm-5'>作者: {{ wb.text.author }}</span>
-		<span class='col-sm-5'>时间: {{ wb.time_create }}</span>
-		<span class='col-sm-2 text-right'>点赞: 0</span>
-	</div>
-	<div class="panel-body">
-		{{ wb.text.msg }}
+<div id='info_list'>
+</div>
+{% endblock %}
+{% block modal %}
+<div class="modal fade" id='wb_update_modal' tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">发布微博：</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form" id='wb_update_form' action='{% url "wb:update" %}' method='POST'>
+					{% csrf_token %}
+					<textarea name='msg' class='form-control' placeholder='上限500字符' rows=8 maxlength='500'></textarea>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id='btn-modal-hide' data-dismiss="modal">取消</button>
+				<button type="submit" class="btn btn-primary" form='wb_update_form' onclick='wb_update()'>发布</button>
+			</div>										
+		</div>
 	</div>
 </div>
-{% endfor %}
+{% endblock %}
+{% block script %}
+<script>
+function wb_update(){
+	document.getElementById('wb_update_form').onsubmit = function(e){
+		e.preventDefault();
+		var f = e.target,
+			formData = new FormData(f),
+			xhr = new XMLHttpRequest();
+		xhr.open("POST", f.action, true);
+		xhr.onreadystatechange=function(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				var dataReply = xhr.responseText,
+					para = document.getElementById('info_list'),
+					newBox = document.createElement('div');
+				para.insertBefore(newBox, para.firstChild);
+				newBox.innerHTML = dataReply;
+			};
+		};
+		xhr.send(formData);
+		$('#wb_update_modal').modal('hide');
+	};
+};
+</script>
 {% endblock %}

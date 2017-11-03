@@ -38,7 +38,7 @@ class UserPageView(View):
             'wbs': wbs
         })
 
-#
+
 # def user_page(request):
 #     uid = request.GET.get('uid')
 #     wb_user = get_object_or_404(WBUser, id=uid)
@@ -48,3 +48,10 @@ class UserPageView(View):
 #         'wbs': wbs
 #     })
 
+
+class WBUpdate(View):
+    def post(self, request):
+        wb_user = get_object_or_404(WBUser, id=request.user.id)
+        msg = request.POST.get('msg')
+        wb = wb_user.update(msg)
+        return HttpResponse(render(request, 'weibo/new_wb.html', {'wb': wb}))

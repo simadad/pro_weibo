@@ -47,11 +47,19 @@ class WBUser(User):
         self.followers.add(user)
         self.save()
 
-    def forward(self, weibo: 'WeiBo'):
+    def update(self, msg):
+        """
+        发布微博
+        """
+        wbt = WBText.objects.create(author=self, msg=msg)
+        wb = WeiBo.objects.create(user=self, text=wbt)
+        return wb
+
+    def forward(self, wb: 'WeiBo'):
         """
         转发微博
         """
-        return WeiBo.objects.create(user=self, weibo_text=weibo.weibo_text)
+        return WeiBo.objects.create(user=self, weibo_text=wb.weibo_text)
 
     def __str__(self):
         return self.name
@@ -82,7 +90,7 @@ class WeiBo(models.Model):
         self.save()
 
     def __str__(self):
-        return self.text
+        return self.text.__str__()
 
 
 class Comment(models.Model):
