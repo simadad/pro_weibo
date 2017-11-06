@@ -82,4 +82,4 @@ def wb_comment(request):
     wid = request.POST.get('wid')
     wb = get_object_or_404(WeiBo, id=wid)
     comment = wb.comment_this(user=wb_user, text=msg)
-    return HttpResponse(str(comment))
+    return HttpResponse(render(request, 'weibo/new_comm.html', {'comm': comment}))

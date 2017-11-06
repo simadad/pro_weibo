@@ -12,32 +12,64 @@
 		<span class='col-sm-5'>作者: {{ wb.text.author }}</span>
 		<span class='col-sm-5'>时间: {{ wb.time_create }}</span>
 		<span class='col-sm-1 text-right'>点赞: 0</span>
-		<span class='col-sm-1 text-right'><a href='#' data-toggle="modal" data-target="#comment_modal" onclick='comm_this({{ wb.id }})'>评论: 0</a></span>
+		<span class='col-sm-1 text-right'><a onclick='comm_this(this, {{ wb.id }})'>评论: 0</a></span>
 	</div>
 	<div class="panel-body">
-		{{ wb.text.msg }}
+		<p>{{ wb.text.msg }}</p>
+		{% for comm in wb.comments.all %}
+			<div class="panel panel-default container-fluid">{% include "weibo\new_comm.html" %}</div>
+		{% endfor %}
 	</div>
 </div>
 {% endfor %}
 {% endblock %}
-{% block modal %}
-<div class="modal fade" id='comment_modal' tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">评论：</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form" id='wb_update_form' action='{% url "wb:comment" %}' method='POST'>
-					{% csrf_token %}
-					<textarea name='msg' class='form-control' placeholder='上限500字符' rows=8 maxlength='500'></textarea>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" id='btn-modal-hide' data-dismiss="modal">取消</button>
-				<button type="submit" class="btn btn-primary" form='wb_update_form' onclick='wb_update()'>发布</button>
-			</div>										
-		</div>
-	</div>
-</div>
+{% block script %}
+<script>
+function comm_cancel(e){
+	// 取消评论
+	var comm = e.parentElement.parentElement.parentElement;
+	comm.parentElement.removeChild(comm);
+};
+
+function comm_this(e, wid){
+	// 向表格填入 weibo.id
+	var ee = e.parentElement.parentElement.nextElementSibling,
+		dd = document.createElement('div');
+	dd.setAttribute('class', 'panel panel-default container-fluid');
+	dd.innerHTML = `\
+		<div class="panel-heading row">\
+			<span class="col-sm-1">评论：</span>\
+			<span class="col-sm-1 pull-right"><input class="btn btn-success" type="submit" form="comm_form" onclick="comm_post(this)" value='发送'></span>\
+			<span class="col-sm-1 pull-right"><a class="btn btn-danger" onclick="comm_cancel(this)">取消</a></span>\
+		</div>\
+		<div class="panel-body">\
+			<form id="comm_form" method="POST" action="{% url "wb:comment" %}">\
+				{% csrf_token %}\
+				<textarea name="msg" class="form-control" placeholder="上限500字符" rows=8 maxlength=500></textarea>\
+				<input class="hidden" name="wid" value="` + wid + `">\
+			</form>\
+		</div>`
+	ee.appendChild(dd);
+};
+
+function comm_post(ee){
+	// 发送评论
+	document.getElementById('comm_form').onsubmit = function(e){
+		e.preventDefault();
+		var f = e.target,
+			formData = new FormData(f),
+			xhr = new XMLHttpRequest();
+		xhr.open("POST", f.action, true);
+		xhr.onreadystatechange=function(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				var dataReply = xhr.responseText,
+					para = ee.parentElement.parentElement.parentElement,
+					newBox = document.createElement('div');
+				para.innerHTML = dataReply;
+			};
+		};
+		xhr.send(formData);
+	};
+};
+</script>
 {% endblock %}
