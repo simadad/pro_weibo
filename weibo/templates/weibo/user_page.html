@@ -11,11 +11,33 @@
 	<div class="panel-heading row">
 		<span class='col-sm-5'>作者: {{ wb.text.author }}</span>
 		<span class='col-sm-5'>时间: {{ wb.time_create }}</span>
-		<span class='col-sm-2 text-right'>点赞: 0</span>
+		<span class='col-sm-1 text-right'>点赞: 0</span>
+		<span class='col-sm-1 text-right'><a href='#' data-toggle="modal" data-target="#comment_modal" onclick='comm_this({{ wb.id }})'>评论: 0</a></span>
 	</div>
 	<div class="panel-body">
 		{{ wb.text.msg }}
 	</div>
 </div>
 {% endfor %}
+{% endblock %}
+{% block modal %}
+<div class="modal fade" id='comment_modal' tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">评论：</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form" id='wb_update_form' action='{% url "wb:comment" %}' method='POST'>
+					{% csrf_token %}
+					<textarea name='msg' class='form-control' placeholder='上限500字符' rows=8 maxlength='500'></textarea>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id='btn-modal-hide' data-dismiss="modal">取消</button>
+				<button type="submit" class="btn btn-primary" form='wb_update_form' onclick='wb_update()'>发布</button>
+			</div>										
+		</div>
+	</div>
+</div>
 {% endblock %}

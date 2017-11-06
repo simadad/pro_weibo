@@ -47,7 +47,7 @@ class WBUser(User):
         self.followers.add(user)
         self.save()
 
-    def update(self, msg):
+    def update(self, msg: str):
         """
         发布微博
         """
@@ -86,8 +86,18 @@ class WeiBo(models.Model):
     text = models.ForeignKey(WBText, verbose_name='文本', related_name='wbs')
 
     def del_this(self):
+        """
+        删除微博
+        """
         self.is_del = True
         self.save()
+
+    def comment_this(self, user: WBUser, text: str):
+        """
+        评论微博
+        """
+        comment = Comment.objects.create(target=self, user=user, text=text)
+        return comment
 
     def __str__(self):
         return self.text.__str__()
@@ -97,12 +107,18 @@ class Comment(models.Model):
     """
     评论
     """
-    target = models.ForeignKey(WBText, verbose_name='被评信息', related_name='comments')
+    target = models.ForeignKey(WeiBo, verbose_name='微博', related_name='comments')
     user = models.ForeignKey(WBUser, verbose_name='用户', related_name='comments')
-    text = models.OneToOneField(WBText, verbose_name='评论')
+    text = models.TextField(verbose_name='评论', max_length=500)
     time_create = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     is_del = models.BooleanField(verbose_name='是否删除', default=False)
 
     def del_this(self):
+        """
+        删除评论
+        """
         self.is_del = True
         self.save()
+
+    def __str__(self):
+        return '{msg}...'.format(msg=self.text[:20])
