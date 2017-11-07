@@ -2,9 +2,17 @@
 {% block title %}{{ wb_user.name }}{% endblock %}
 {% block right %}
 <div class="jumbotron">
-  <h1>{{ wb_user.name }} 的主页</h1>
-  <p>个性签名...</p>
-  <p><a class="btn btn-primary btn-lg" href="#" role="button">修改资料</a></p>
+	<h1>{{ wb_user.name }} 的主页</h1>
+	<p>个性签名...</p>
+	<p>
+	{% if wb_user in user.followers.all %}
+		<a class="btn btn-success btn-lg" href="#" role="button" onclick='unfollow_this(this)'>已关注</a>
+	{% elif wb_user.id == user.id %}
+		<a class="btn btn-primary btn-lg" href="#" role="button" disabled>关注</a>
+	{% else %}
+		<a class="btn btn-primary btn-lg" href="#" role="button" onclick='follow_this(this)'>关注</a>
+	{% endif %}
+	</p>
 </div>
 {% for wb in wbs %}
 <div class="panel panel-default container-fluid">
@@ -48,6 +56,34 @@
 {% endblock %}
 {% block script %}
 <script>
+function follow_this(e){
+	// 关注用户
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '{% url "wb:follow" %}?uid={{ wb_user.id }}', true);
+	xhr.onreadystatechange=function(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			e.setAttribute('onclick', 'unfollow_this(this)');
+			e.setAttribute('class', 'btn btn-success btn-lg');
+			e.innerText = '已关注';
+		};
+	};
+	xhr.send();
+};
+
+function unfollow_this(e){
+	// 解除关注
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '{% url "wb:unfollow" %}?uid={{ wb_user.id }}', true);
+	xhr.onreadystatechange=function(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			e.setAttribute('onclick', 'follow_this(this)');
+			e.setAttribute('class', 'btn btn-primary btn-lg');
+			e.innerText = '关注';
+		};
+	};
+	xhr.send();	
+}
+
 function forward_this(wid){
 	document.getElementById('forward_weibo').setAttribute('value', wid);
 }

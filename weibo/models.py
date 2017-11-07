@@ -17,12 +17,15 @@ class WBUser(User):
     nickname = models.CharField(verbose_name='昵称', max_length=60, null=True, blank=True)
     gender = models.IntegerField(verbose_name='性别', choices=GENDER_OPTIONS, default=0)
     _info = models.TextField(verbose_name='其他信息', blank=True, null=True)
+    # ManyToManyField 的首个参数指定被关联的类，
+    # 此处 WBUser 尚未定义完成，可用字符串形式“临时”代替，正式添加 followers 时，django 会自动替换为 WBUser 对象
     followers = models.ManyToManyField('WBUser', verbose_name='粉丝')
 
     @property
     def name(self):
         """
         返回用户名字，优先显示昵称
+        装饰器 @property 可以使被装饰的函数以属性的形式调用，如 self.name
         """
         return self.nickname or self.username
 
@@ -36,6 +39,7 @@ class WBUser(User):
     def save_user_info(self, info: dict):
         """
         保存字段 _info，将字典转换为 json 格式的字符串
+        info: dict —— `: dict` 用来指定参数 info 是类 dict 的对象，用来指定参数的格式
         """
         self._info = json.dumps(info)
         self.save()
@@ -43,9 +47,16 @@ class WBUser(User):
     def follow(self, user: 'WBUser'):
         """
         关注
+        user: 'WBUser' —— `: 'WBUser'` 用来指定参数 user 是类 WBUser 的对象，用来指定参数的格式
+        此处 WBUser 尚未定义完成，可用字符串形式“临时”代替，正式添加传递参数时，django 会自动替换为 WBUser 对象
         """
         self.followers.add(user)
-        self.save()
+
+    def unfollow(self, user: 'WBUser'):
+        """
+        解除关注
+        """
+        self.followers.remove(user)
 
     def update(self, msg: str):
         """
