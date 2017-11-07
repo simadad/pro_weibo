@@ -1,7 +1,7 @@
 <div class="panel-heading row">
-	<span class='col-sm-5'>用户: {{ comm.user }}</span>
+	<span class='col-sm-4'>用户: {{ comm.user }}</span>
 	<span class='col-sm-5'>时间: {{ comm.time_create }}</span>
-	<span class='col-sm-1 pull-right'>点赞: 0</span>
+	<input class='btn btn-danger col-sm-1 pull-right' onclick='comm_this(this, {{ wb.id }})' value='点赞: 0'>
 </div>
 <div class="panel-body">
 	<p>{{ comm.text }}</p>

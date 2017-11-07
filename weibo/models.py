@@ -59,7 +59,7 @@ class WBUser(User):
         """
         转发微博
         """
-        return WeiBo.objects.create(user=self, weibo_text=wb.weibo_text)
+        return WeiBo.objects.create(user=self, text=wb.text)
 
     def __str__(self):
         return self.name

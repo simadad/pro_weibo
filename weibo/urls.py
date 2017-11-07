@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^u', views.user_page, name='upage'),
     # url(r'^u', views.UserPageView.as_view(), name='upage'),
     url(r'^comment', views.wb_comment, name='comment'),
+    url(r'^forward', views.wb_forward, name='forward'),
 ]

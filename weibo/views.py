@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 # from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,9 @@ from weibo.models import *
 
 # @method_decorator(login_required, 'dispatch')
 # class HomePageView(View):
+#    """
+#   class base views
+#   """
 #     def get(self, request):
 #         wb_user = get_object_or_404(WBUser, id=request.user.id)
 #         # wbs = WeiBo.objects.all().order_by('-time_create')
@@ -83,3 +86,22 @@ def wb_comment(request):
     wb = get_object_or_404(WeiBo, id=wid)
     comment = wb.comment_this(user=wb_user, text=msg)
     return HttpResponse(render(request, 'weibo/new_comm.html', {'comm': comment}))
+
+
+def wb_forward(request):
+    """
+    微博转发
+    """
+    wb_user = get_object_or_404(WBUser, id=request.user.id)
+    msg = request.POST.get('msg')
+    wid = request.POST.get('wid')
+    wb = get_object_or_404(WeiBo, id=wid)
+    new_wb = wb_user.forward(wb)
+    if msg:
+        new_wb.comment_this(user=wb_user, text=msg)
+    # redirect 接受 url name 参数，返回一个可以被 views return 返回的对象 HttpResponseRedirect
+    response = redirect('wb:upage')
+    # HttpResponseRedirect['Location'] 为跳转地址，下面的代码为地址直接拼接 get 参数
+    response['Location'] += '?uid={uid}'.format(uid=wb_user.id)
+    # HttpResponseRedirect 对象可以直接 return 返回，页面跳转到 response['Location'] 所指定的地址
+    return response
