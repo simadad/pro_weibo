@@ -1,58 +1,25 @@
 {% extends 'base_page.html' %}
-{% block title %}{{ wb_user.name }}{% endblock %}
+{% block title %}{{ wb_user.name }} 的主页{% endblock %}
 {% block right %}
 <div class="jumbotron">
 	<h1>{{ wb_user.name }} 的主页</h1>
 	<p>个性签名...</p>
 	<p>
 	{% if wb_user in user.followers.all %}
-		<a class="btn btn-success btn-lg" href="#" role="button" onclick='unfollow_this(this)'>已关注</a>
+		<a class="btn btn-success btn-lg" role="button" onclick='unfollow_this(this)'>已关注</a>
 	{% elif wb_user.id == user.id %}
-		<a class="btn btn-primary btn-lg" href="#" role="button" disabled>关注</a>
+		<a class="btn btn-primary btn-lg" role="button" disabled>关注</a>
 	{% else %}
-		<a class="btn btn-primary btn-lg" href="#" role="button" onclick='follow_this(this)'>关注</a>
+		<a class="btn btn-primary btn-lg" role="button" onclick='follow_this(this)'>关注</a>
 	{% endif %}
 	</p>
 </div>
 {% for wb in wbs %}
-<div class="panel panel-default container-fluid">
-	<div class="panel-heading row">
-		<span class='col-sm-4'>作者: {{ wb.text.author }}</span>
-		<span class='col-sm-5'>时间: {{ wb.time_create }}</span>
-		<input class='btn btn-danger col-sm-1' onclick='' value='点赞: 0'>
-		<a class='btn btn-info col-sm-1' data-toggle="modal" data-target="#forward_modal" onclick='forward_this({{ wb.id }})'>转发: 0</a>
-		<input class='btn btn-primary col-sm-1' onclick='comm_this(this, {{ wb.id }})' value='评论: 0'>
-	</div>
-	<div class="panel-body">
-		<p>{{ wb.text.msg }}</p>
-		{% for comm in wb.comments.all %}
-			<div class="panel panel-default container-fluid">{% include "weibo\new_comm.html" %}</div>
-		{% endfor %}
-	</div>
-</div>
+	{% include "weibo\list_wb.html" %}
 {% endfor %}
 {% endblock %}
 {% block modal %}
-<div class="modal fade" id='forward_modal' tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">微博转发：</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form" id='forward_form' action='{% url "wb:forward" %}' method='POST'>
-					{% csrf_token %}
-					<textarea name='msg' class='form-control' placeholder='转发评论，上限500字符' rows=8 maxlength='500'></textarea>
-					<input id='forward_weibo' class='hidden' name='wid'>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" id='btn-modal-hide' data-dismiss="modal">取消</button>
-				<button type="submit" class="btn btn-primary" form='forward_form' onclick='wb_update()'>转发</button>
-			</div>										
-		</div>
-	</div>
-</div>
+	{% include "weibo\forward_modal.html" %}
 {% endblock %}
 {% block script %}
 <script>
@@ -84,54 +51,6 @@ function unfollow_this(e){
 	xhr.send();	
 }
 
-function forward_this(wid){
-	document.getElementById('forward_weibo').setAttribute('value', wid);
-}
-function comm_cancel(e){
-	// 取消评论
-	var comm = e.parentElement.parentElement.parentElement;
-	comm.parentElement.removeChild(comm);
-};
-
-function comm_this(e, wid){
-	// 向表格填入 weibo.id
-	var ee = e.parentElement.parentElement.nextElementSibling,
-		dd = document.createElement('div');
-	dd.setAttribute('class', 'panel panel-default container-fluid');
-	dd.innerHTML = `\
-		<div class="panel-heading row">\
-			<span class="col-sm-1">评论：</span>\
-			<span class="col-sm-1 pull-right"><input class="btn btn-success" type="submit" form="comm_form" onclick="comm_post(this)" value='发送'></span>\
-			<span class="col-sm-1 pull-right"><a class="btn btn-danger" onclick="comm_cancel(this)">取消</a></span>\
-		</div>\
-		<div class="panel-body">\
-			<form id="comm_form" method="POST" action="{% url "wb:comment" %}">\
-				{% csrf_token %}\
-				<textarea name="msg" class="form-control" placeholder="上限500字符" rows=8 maxlength=500></textarea>\
-				<input class="hidden" name="wid" value="` + wid + `">\
-			</form>\
-		</div>`
-	ee.appendChild(dd);
-};
-
-function comm_post(ee){
-	// 发送评论
-	document.getElementById('comm_form').onsubmit = function(e){
-		e.preventDefault();
-		var f = e.target,
-			formData = new FormData(f),
-			xhr = new XMLHttpRequest();
-		xhr.open("POST", f.action, true);
-		xhr.onreadystatechange=function(){
-			if(xhr.readyState == 4 && xhr.status == 200){
-				var dataReply = xhr.responseText,
-					para = ee.parentElement.parentElement.parentElement,
-					newBox = document.createElement('div');
-				para.innerHTML = dataReply;
-			};
-		};
-		xhr.send(formData);
-	};
-};
+{% include "weibo\page_js.html" %}
 </script>
 {% endblock %}

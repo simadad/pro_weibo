@@ -26,11 +26,11 @@ def homepage(request):
     """
     个人中心
     """
-    wb_user = get_object_or_404(WBUser, id=request.user.id)
-    # wbs = WeiBo.objects.all().order_by('-time_create')
+    user = get_object_or_404(WBUser, id=request.user.id)
+    wbs = WeiBo.objects.filter(user__in=user.followers.all()).order_by('-time_create')[:10]
     return render(request, 'weibo/homepage.html', {
-        'wb_user': wb_user,
-        # 'wbs': wbs
+        'user': user,
+        'wbs': wbs
     })
 
 

@@ -1,5 +1,5 @@
 {% extends 'base_page.html' %}
-{% block title %}个人主页{% endblock %}
+{% block title %}个人中心{% endblock %}
 {% block left_more %}
 <hr />
 <div class='list-group'>
@@ -9,11 +9,18 @@
 {% endblock %}
 {% block right %}
 <div class="jumbotron">
-  <h1>欢迎回来 {{ wb_user.name }}</h1>
-  <p>个性签名...</p>
+  <h1>{{ user.name }} <small>欢迎回来</small></h1>
+  <p><small>个性签名...</small></p>
   <p><a class="btn btn-primary btn-lg" href="#" role="button">修改资料</a></p>
 </div>
-<div id='info_list'>
+<div class='row' id='info_list'>
+</div>
+<div class='row' id='wb_list'>
+<button class='btn btn-lg btn-block btn-primary'>最新好友微博</button>
+<hr />
+{% for wb in wbs %}
+	{% include "weibo\list_wb.html" %}
+{% endfor %}
 </div>
 {% endblock %}
 {% block modal %}
@@ -36,6 +43,8 @@
 		</div>
 	</div>
 </div>
+
+{% include "weibo\forward_modal.html" %}
 {% endblock %}
 {% block script %}
 <script>
@@ -59,5 +68,7 @@ function wb_update(){
 		$('#wb_update_modal').modal('hide');
 	};
 };
+
+{% include "weibo\page_js.html" %}
 </script>
 {% endblock %}
