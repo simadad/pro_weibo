@@ -19,17 +19,10 @@
 	</div>
 	<div class="panel-body">
 		<p>{{ wb.text.msg }}</p>
-		<div class="panel panel-warning container-fluid">
-			<div class="panel-heading row">
-				<span>评论</span>
-			</div>
-			{% for comm in wb.comments.all %}
-			<div class="panel-body">
-				{% include "weibo\new_comm.html" %}
-			</div>
-			{% empty %}
-			<small class='wb_empty'>暂无评论...</small>
-			{% endfor %}
-		</div>
 	</div>
+	{% for comm in wb.comments.all %}
+	<div class="panel-body">
+		{% include "weibo\new_comm.html" %}
+	</div>
+	{% endfor %}
 </div>

@@ -41,13 +41,11 @@ function comm_post(ee){
 			if(xhr.readyState == 4 && xhr.status == 200){
 				var dataReply = xhr.responseText,
 					para = ee.parentElement.parentElement.parentElement,
-					small = para.parentElement.querySelector('small'),
 					newBox = document.createElement('div');
 				newBox.setAttribute('class', 'panel-body');
 				newBox.innerHTML = dataReply;
-				para.parentElement.querySelector('div.panel').appendChild(newBox);
+				para.parentElement.parentElement.appendChild(newBox);
 				para.parentElement.removeChild(para);
-				small.parentElement.removeChild(small);
 			};
 		};
 		xhr.send(formData);
