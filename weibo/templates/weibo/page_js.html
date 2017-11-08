@@ -12,7 +12,7 @@ function comm_this(e, wid){
 	// 开启评论
 	var ee = e.parentElement.nextElementSibling,
 		dd = document.createElement('div');
-	dd.setAttribute('class', 'panel panel-default container-fluid');
+	dd.setAttribute('class', 'panel panel-primary container-fluid');
 	dd.innerHTML = `\
 		<div class="panel-heading row">\
 			<span class="col-sm-1">评论：</span>\
@@ -41,8 +41,13 @@ function comm_post(ee){
 			if(xhr.readyState == 4 && xhr.status == 200){
 				var dataReply = xhr.responseText,
 					para = ee.parentElement.parentElement.parentElement,
+					small = para.parentElement.querySelector('small'),
 					newBox = document.createElement('div');
-				para.innerHTML = dataReply;
+				newBox.setAttribute('class', 'panel-body');
+				newBox.innerHTML = dataReply;
+				para.parentElement.querySelector('div.panel').appendChild(newBox);
+				para.parentElement.removeChild(para);
+				small.parentElement.removeChild(small);
 			};
 		};
 		xhr.send(formData);

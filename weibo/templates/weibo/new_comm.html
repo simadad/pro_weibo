@@ -1,8 +1,9 @@
-<div class="panel-heading row">
-	<span class='col-sm-4'>用户: {{ comm.user }}</span>
-	<span class='col-sm-5'>时间: {{ comm.time_create }}</span>
-	<a class='btn btn-default col-sm-1 pull-right' onclick='comm_this(this, {{ wb.id }})'>点赞: <span class="badge">0</span></a>
-</div>
-<div class="panel-body">
+<h4>
+	<span>{{ comm.user }}：</span>
+	<a class='btn btn-default pull-right'>赞：<span class="badge">0</span></a>
+</h4>
+<hr />
+<p>
 	<p>{{ comm.text }}</p>
-</div>
+</p>
+<p class='text-right'><small>——{{ comm.time_create }}</small></p>

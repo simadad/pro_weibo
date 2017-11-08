@@ -13,13 +13,15 @@
   <p><small>个性签名...</small></p>
   <p><a class="btn btn-primary btn-lg" href="#" role="button">修改资料</a></p>
 </div>
-<div class="panel panel-danger container-fluid hidden">
-	<div class="panel-heading row text-center">我的最新微博</div>
-	<div class="panel-body" id='wb_update_list'></div>
+<div class="hidden wb_list">
+	<h1>我的最新微博</h1>
+	<hr />
+	<div class="wb_list_body" id='wb_update_list'></div>
 </div>
-<div class="panel panel-danger container-fluid">
-	<div class="panel-heading row text-center">最新好友微博</div>
-	<div class="panel-body">
+<div class='wb_list'>
+	<h1>最新好友微博</h1>
+	<hr />
+	<div class="wb_list_body">
 	{% for wb in wbs %}
 		{% include "weibo\list_wb.html" %}
 	{% endfor %}
