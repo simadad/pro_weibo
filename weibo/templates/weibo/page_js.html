@@ -41,10 +41,10 @@ function comm_post(ee){
 			if(xhr.readyState == 4 && xhr.status == 200){
 				var dataReply = xhr.responseText,
 					para = ee.parentElement.parentElement.parentElement,
-					newBox = document.createElement('div');
-				newBox.setAttribute('class', 'panel-body');
+					newBox = document.createElement('li');
+				newBox.setAttribute('class', 'list-group-item');
 				newBox.innerHTML = dataReply;
-				para.parentElement.parentElement.appendChild(newBox);
+				para.parentElement.nextElementSibling.querySelector('ul').appendChild(newBox);
 				para.parentElement.removeChild(para);
 			};
 		};

@@ -20,9 +20,13 @@
 	<div class="panel-body">
 		<p>{{ wb.text.msg }}</p>
 	</div>
-	{% for comm in wb.comments.all %}
-	<div class="panel-body">
-		{% include "weibo\new_comm.html" %}
+	<div class="panel-footer row">
+		<ul class="list-group">
+		{% for comm in wb.comments.all %}
+			<li class='list-group-item'>
+				{% include "weibo\new_comm.html" %}
+			</li>
+		{% endfor %}
+		</ul>
 	</div>
-	{% endfor %}
 </div>
