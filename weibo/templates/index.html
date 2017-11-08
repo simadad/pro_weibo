@@ -6,11 +6,21 @@
 {% block base_header_to_content %}<hr />{% endblock %}
 {% block base_content %}
 {% if user.is_authenticated %}
-<h2>
-	<span><a href='{% url "wb:homepage" %}'>个人中心</a></span>
-	<span><a href='{% url "wb:upage" %}?uid={{ user.id }}'>我的主页</a></span>
-	<span><a href='{% url "account:logout" %}'>退出登录</a></span>
-</h2>
+<div class="jumbotron container-fluid">
+	<div class='row'>
+		<div class='col-md-4'>
+			<h1><a href='{% url "wb:homepage" %}'>个人中心</a></h1>
+			<h1><a href='{% url "wb:upage" %}?uid={{ user.id }}'>我的主页</a></h1>
+		</div>
+		<div class='col-md-8'>
+			<h1>crossin 的编程教室<small>大作业——</small></h1>
+			<h1 class='text-center'><i class='text-danger'>简易微博</i></h1>
+		</div>
+	</div>
+	<div class='row'>
+		<p><a class='btn btn-primary pull-right' href='{% url "account:logout" %}'>退出登录</a></p>
+	</div>
+</div>
 <hr />
 <table class="table table-hover table-striped table-bordered">
 	<caption>

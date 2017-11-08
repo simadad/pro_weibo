@@ -2,7 +2,7 @@
 {% block title %}{{ wb_user.name }} 的主页{% endblock %}
 {% block right %}
 <div class="jumbotron">
-	<h1>{{ wb_user.name }} 的主页</h1>
+	<h1>{{ wb_user.name }} <small>的主页</small></h1>
 	<p>个性签名...</p>
 	<p>
 	{% if wb_user in user.followers.all %}
